@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>
+            Add Homework
+        </title>
+    </head>
+    <body>
+        <h2 style="text-align: center;">Add Homework</h2>
+        <form method="POST" action="/homework/new">
+            <input type="text" name="subject" list="subjectlist" placeholder="Fach" autocomplete="off">
+                <datalist id="subjectlist"></datalist>
+            </input>
+            <br>
+            <input type="text" name="todo" placeholder="To do" autocomplete="off">
+            <br>
+            <input type="date" name="enddate">
+            <br>
+            <input type="submit" value="Hinzufügen"> 
+        <form>
+        <script>
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/subjects");
+            xhr.onload = function (){
+                var l = xhr.responseText.split(",");
+                var elem = document.getElementById("subjectlist")
+                for (var i = 0; i < l.length; i++){
+                    var n = document.createElement("option");
+                    n.value = l[i];
+                    elem.appendChild(n);
+                }
+            }
+            xhr.send();
+        </script>
+    </body>
+</html>

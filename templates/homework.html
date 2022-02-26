@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>Homework</title>
+    </head>
+    <body>
+        <h2 style="text-align: center;">Homework</h2>
+        <table id="doithome">
+            <tr>
+                <th>Subject</th>
+                <th>Todo</th>
+                <th>Abgabetermin</th>
+                <th>Gemacht</th>
+            </tr>
+        </table>
+        <button onclick='window.open("/homework/new", "_self");'>Hinzufügen</button>
+        <style>
+            body {
+                accent-color: rgba(0, 247, 38, 0.45);
+            }
+            table {
+              font-family: arial, sans-serif;
+              border-collapse: collapse;
+              width: 100%;
+            }
+            td, th {
+              border: 1px solid #dddddd;
+              text-align: left;
+              padding: 8px;
+            }
+        </style>
+        <script>
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:5000/homework/work")
+            xhr.onload = function (){
+                var one = xhr.responseText.split("\n");
+                for (var i1 = 0; i1 < one.length; i1++){
+                    var elem = document.createElement("tr");
+                    var id_hash = "";
+                    var ok = false;
+                    for (var i2 = 0; i2 < one[i1].split(",").length-1; i2++){
+                        ok = true;
+                        if (i2 == one[i1].split(",").length-2){
+                            elem.id = one[i1].split(",")[i2];
+                            id_hash = one[i1].split(",")[i2];
+                            break
+                        }
+                        var td = document.createElement("td");
+                        td.innerText = one[i1].split(",")[i2];
+                        elem.appendChild(td);
+                    }
+                    if (!ok){
+                        break;
+                    }
+                    console.log(id_hash);
+                    var td = document.createElement("td");
+                    var input = document.createElement("input");
+                    input.type = "checkbox";
+                    if (one[i1].split(",")[one[i1].split(",").length-1] == "true"){
+                        input.checked = true
+                    } 
+                    input.id = id_hash;
+                    input.onchange = function (){
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/homework/done_change");
+                        xhr.send(this.id+","+this.checked);
+                    }
+                    td.appendChild(input);
+                    elem.appendChild(td);
+                    document.getElementById("doithome").appendChild(elem);
+                }
+            }
+            xhr.send();
+        </script>
+    </body>
+</html>
